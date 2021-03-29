@@ -10,7 +10,7 @@ This repository contains all the code for the Spring Security Test tutorial, ill
 
 To install this example, run the following commands:
 ```bash
-git clone https://github.com/indiepopart/security-test.git
+git clone https://github.com/indiepopart/spring-security-test.git
 ```
 
 ## Configure the api-gateway
@@ -37,7 +37,7 @@ You will be prompted to select the following options:
 - Redirect URI: Default
 - Post Logout Redirect URI: Default
 
-The OktaCLI will create the client application and configure the issuer, clientId and clientSecret in `src/main/resources/application.properties`. Update the `issuer`, `client-id` and `client-secret` in `application.yml`.
+The OktaCLI will create the client application and configure the issuer, clientId and clientSecret in `src/main/resources/application.properties`. Update the `issuer`, `client-id` and `client-secret` in `application.yml`. Delete `application.properties`.
 
 ```shell
 okta:
@@ -56,6 +56,13 @@ Update the `mongo-dump` files location in `application.yml`.
 ```
 mongo-dump: /{path}/listingsAndReviews.bson
 ```
+Update the `issuer` as well.
+
+```yml
+okta:
+  oauth2:
+    issuer: https://{yourOktaDomain}/oauth2/default
+```
 
 ## Configure the theaters microservice
 
@@ -70,6 +77,8 @@ With OktaCLI, create a client application as illustrated before, and provide the
 - Type of Application: Spring Boot
 - Redirect URI: Default
 - Post Logout Redirect URI: Default
+
+Update the `issuer`, `client-id` and `client-secret` in `application.yml`, from the values in `application.properties`. Delete `application.properties`.
 
 
 Get the MongoDB dump files `theaters.bson`, `theaters.metadata.json` from [Github](https://github.com/huynhsamha/quick-mongo-atlas-datasets/tree/master/dump/sample_mflix).
