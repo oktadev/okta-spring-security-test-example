@@ -10,6 +10,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
+
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.opaqueToken;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -63,6 +65,14 @@ public class AirbnbListingMvcTest {
     @Test
     public void collectionGet_withOpaqueToken_returnsOk() throws Exception {
         this.mockMvc.perform(get("/listing").with(opaqueToken())).andExpect(status().isOk());
+    }
+
+    @Test
+    public void collectionGet_withInvalidJWtToken_returnsOk() throws Exception {
+        this.mockMvc.perform(get("/listing").with(jwt()
+        .jwt(jwt -> jwt.claim("exp", Instant.MIN)
+                .claim("iss", "invalid")
+                .claim("aud", "invalid")))).andExpect(status().isOk());
     }
 
 }
