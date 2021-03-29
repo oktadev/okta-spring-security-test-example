@@ -62,7 +62,7 @@ public class TheaterControllerTest {
         this.client.mutateWith(mockOpaqueToken()
                 .attributes(attrs -> attrs.put("aud", "ïnvalid"))
                 .attributes(attrs -> attrs.put("iss", "ïnvalid"))
-                .attributes(attrs -> attrs.put("ext", Instant.MIN)))
+                .attributes(attrs -> attrs.put("exp", Instant.MIN)))
                 .get().uri("/theater").exchange().expectStatus().isOk();
     }
 
