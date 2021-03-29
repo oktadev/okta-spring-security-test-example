@@ -1,0 +1,19 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: theater
+  data:
+    mongodb:
+      port: 27018
+      database: theaters
+  security:
+    oauth2:
+      resourceserver:
+        opaque-token:
+          introspection-uri: https://{yourOktaDomain}/oauth2/default/v1/introspect
+          client-secret: {clientSecret}
+          client-id: {clientId}
+
+mongo-dump: /{path}/theaters.bson

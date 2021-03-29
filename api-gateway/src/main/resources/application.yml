@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+okta:
+  oauth2:
+    issuer: https://{yourOktaDomain}/oauth2/default
+    client-id: {clientId}
+    client-secret: {clientSecret}
