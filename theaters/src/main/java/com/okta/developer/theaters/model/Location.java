@@ -1,6 +1,5 @@
 package com.okta.developer.theaters.model;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

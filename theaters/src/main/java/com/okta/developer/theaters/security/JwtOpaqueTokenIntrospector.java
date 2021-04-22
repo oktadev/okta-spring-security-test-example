@@ -17,32 +17,28 @@ import java.util.List;
 
 public class JwtOpaqueTokenIntrospector implements ReactiveOpaqueTokenIntrospector {
 
-
     @Autowired
     private OAuth2ResourceServerProperties oAuth2;
     private ReactiveOpaqueTokenIntrospector delegate;
 
-
     @PostConstruct
-    private void setUp(){
+    private void setUp() {
         delegate =
-                new NimbusReactiveOpaqueTokenIntrospector(oAuth2.getOpaquetoken().getIntrospectionUri(),
-                        oAuth2.getOpaquetoken().getClientId(),
-                        oAuth2.getOpaquetoken().getClientSecret());
+            new NimbusReactiveOpaqueTokenIntrospector(oAuth2.getOpaquetoken().getIntrospectionUri(),
+                oAuth2.getOpaquetoken().getClientId(),
+                oAuth2.getOpaquetoken().getClientSecret());
     }
 
     public Mono<OAuth2AuthenticatedPrincipal> introspect(String token) {
         return this.delegate.introspect(token)
-                .flatMap(principal -> enhance(principal));
+            .flatMap(principal -> enhance(principal));
     }
 
-
-    private Mono<OAuth2AuthenticatedPrincipal> enhance(OAuth2AuthenticatedPrincipal principal){
+    private Mono<OAuth2AuthenticatedPrincipal> enhance(OAuth2AuthenticatedPrincipal principal) {
         Collection<GrantedAuthority> authorities = extractAuthorities(principal);
         OAuth2AuthenticatedPrincipal enhanced = new DefaultOAuth2AuthenticatedPrincipal(principal.getAttributes(), authorities);
         return Mono.just(enhanced);
     }
-
 
     private Collection<GrantedAuthority> extractAuthorities(OAuth2AuthenticatedPrincipal principal) {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
@@ -51,8 +47,8 @@ public class JwtOpaqueTokenIntrospector implements ReactiveOpaqueTokenIntrospect
         List<String> groups = principal.getAttribute("groups");
         if (groups != null) {
             groups.stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .forEach(authorities::add);
+                .map(SimpleGrantedAuthority::new)
+                .forEach(authorities::add);
         }
 
         return authorities;

@@ -11,6 +11,7 @@ import de.flapdoodle.embed.mongo.config.MongoRestoreConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,11 +49,11 @@ public class MongoDBSeeder {
 
         for (String name : mongoClient.listDatabaseNames()) {
             logger.info("DB: {}", name);
-            if ("airbnb".equalsIgnoreCase(name)){
+            if ("airbnb".equalsIgnoreCase(name)) {
                 MongoDatabase db = mongoClient.getDatabase(name);
                 for (String collection : db.listCollectionNames()) {
                     logger.info("Collection: {}", collection);
-                    MongoCollection mongoCollection = db.getCollection(collection);
+                    MongoCollection<Document> mongoCollection = db.getCollection(collection);
                     logger.info("Documents count {}", mongoCollection.countDocuments());
                 }
             }
@@ -62,22 +63,20 @@ public class MongoDBSeeder {
 
     public void restore() {
         try {
-
             File file = new File(mongoDump);
             if (!file.exists()) {
                 throw new RuntimeException("File does not exist");
             }
-            String name =  file.getAbsolutePath();
+            String name = file.getAbsolutePath();
 
-
-            IMongoRestoreConfig mongoconfig= new MongoRestoreConfigBuilder()
-                    .version(Version.Main.PRODUCTION)
-                    .net(new Net(mongoPort, Network.localhostIsIPv6()))
-                    .db("airbnb")
-                    .collection("airbnb")
-                    .dropCollection(true)
-                    .dir(name)
-                    .build();
+            IMongoRestoreConfig mongoconfig = new MongoRestoreConfigBuilder()
+                .version(Version.Main.PRODUCTION)
+                .net(new Net(mongoPort, Network.localhostIsIPv6()))
+                .db("airbnb")
+                .collection("airbnb")
+                .dropCollection(true)
+                .dir(name)
+                .build();
 
             MongoRestoreExecutable mongoRestoreExecutable = MongoRestoreStarter.getDefaultInstance().prepare(mongoconfig);
             MongoRestoreProcess mongoRestore = mongoRestoreExecutable.start();

@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @NoArgsConstructor
 public class AirbnbListing {
 
-
     @Id
     private String id;
     private String name;

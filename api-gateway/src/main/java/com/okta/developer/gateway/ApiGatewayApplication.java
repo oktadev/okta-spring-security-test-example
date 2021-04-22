@@ -17,12 +17,12 @@ public class ApiGatewayApplication {
 	@Bean
 	public RouteLocator routeLocator(RouteLocatorBuilder builder, TokenRelayGatewayFilterFactory filterFactory) {
 		return builder.routes()
-				.route("listing", r -> r.path("/listing/**")
-						.filters(f -> f.filter(filterFactory.apply()))
-						.uri("lb://listing"))
-				.route("theater", r -> r.path("/theater/**")
-						.filters(f -> f.filter(filterFactory.apply()))
-						.uri("lb://theater"))
-				.build();
+			.route("listing", r -> r.path("/listing/**")
+				.filters(f -> f.filter(filterFactory.apply()))
+				.uri("lb://listing"))
+			.route("theater", r -> r.path("/theater/**")
+				.filters(f -> f.filter(filterFactory.apply()))
+				.uri("lb://theater"))
+			.build();
 	}
 }

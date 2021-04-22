@@ -43,7 +43,6 @@ public class MongoDBSeeder {
     @EventListener
     public void seed(ContextRefreshedEvent event) {
 
-
         Flux<String> databaseNames = Flux.from(mongoClient.listDatabaseNames());
         databaseNames.subscribe(name -> {
             logger.info("DB: {}", name);
@@ -54,7 +53,7 @@ public class MongoDBSeeder {
         databaseNames = Flux.from(mongoClient.listDatabaseNames());
         databaseNames.subscribe(database -> {
             logger.info("DB: {}", database);
-            if ("theaters".equalsIgnoreCase(database)){
+            if ("theaters".equalsIgnoreCase(database)) {
                 MongoDatabase db = mongoClient.getDatabase(database);
 
                 Flux<String> collectionNames = Flux.from(db.listCollectionNames());
@@ -68,28 +67,25 @@ public class MongoDBSeeder {
                 });
             }
         });
-
     }
-
 
     public void restore() {
         try {
-
             File file = new File(mongoDump);
             if (!file.exists()) {
                 throw new RuntimeException("File does not exist");
             }
-            String name =  file.getAbsolutePath();
+            String name = file.getAbsolutePath();
 
 
-            IMongoRestoreConfig mongoconfig= new MongoRestoreConfigBuilder()
-                    .version(Version.Main.PRODUCTION)
-                    .net(new Net(mongoPort, Network.localhostIsIPv6()))
-                    .db("theaters")
-                    .collection("theaters")
-                    .dropCollection(true)
-                    .dir(name)
-                    .build();
+            IMongoRestoreConfig mongoconfig = new MongoRestoreConfigBuilder()
+                .version(Version.Main.PRODUCTION)
+                .net(new Net(mongoPort, Network.localhostIsIPv6()))
+                .db("theaters")
+                .collection("theaters")
+                .dropCollection(true)
+                .dir(name)
+                .build();
 
             MongoRestoreExecutable mongoRestoreExecutable = MongoRestoreStarter.getDefaultInstance().prepare(mongoconfig);
             MongoRestoreProcess mongoRestore = mongoRestoreExecutable.start();
