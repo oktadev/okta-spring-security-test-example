@@ -1,0 +1,12 @@
+version: "3.1"
+
+services:
+  mongo:
+    image: mongo:bionic
+    environment:
+      - MONGO_INIT_DATABASE=airbnb
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./initdb.sh:/docker-entrypoint-initdb.d/initdb.sh
+      - /home/indiepopart/mongodb/listings:/db-dump
