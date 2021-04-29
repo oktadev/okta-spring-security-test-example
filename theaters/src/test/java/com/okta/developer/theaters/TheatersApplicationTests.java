@@ -20,7 +20,7 @@ class TheatersApplicationTests {
 
 	@BeforeAll
 	public static void setUp() {
-		mongoDBContainer.setPortBindings(List.of("27018:27017"));
+		mongoDBContainer.setPortBindings(List.of("27017:27017"));
 		mongoDBContainer.start();
 	}
 
@@ -33,5 +33,4 @@ class TheatersApplicationTests {
 	public static void tearDown(){
 		mongoDBContainer.stop();
 	}
-
 }

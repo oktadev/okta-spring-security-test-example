@@ -33,7 +33,7 @@ public class TheaterControllerTest {
 
     @BeforeAll
     public static void setUp() {
-        mongoDBContainer.setPortBindings(List.of("27018:27017"));
+        mongoDBContainer.setPortBindings(List.of("27017:27017"));
         mongoDBContainer.start();
     }
 

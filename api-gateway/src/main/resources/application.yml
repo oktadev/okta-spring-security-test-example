@@ -11,3 +11,9 @@ okta:
     issuer: https://{yourOktaDomain}/oauth2/default
     client-id: {clientId}
     client-secret: {clientSecret}
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${SERVICE_URL_DEFAULT_ZONE}

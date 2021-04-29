@@ -6,8 +6,8 @@ spring:
     name: theater
   data:
     mongodb:
-      port: 27018
-      database: theaters
+      port: 27017
+      database: airbnb
   security:
     oauth2:
       resourceserver:
@@ -16,4 +16,7 @@ spring:
           client-secret: {clientSecret}
           client-id: {clientId}
 
-mongo-dump: /{path}/theaters.bson
+eureka:
+  client:
+    service-url:
+      defaultZone: ${SERVICE_URL_DEFAULT_ZONE}
