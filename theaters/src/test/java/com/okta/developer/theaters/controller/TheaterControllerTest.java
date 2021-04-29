@@ -2,6 +2,8 @@ package com.okta.developer.theaters.controller;
 
 import com.okta.developer.theaters.model.Location;
 import com.okta.developer.theaters.model.Theater;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -9,17 +11,32 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.utility.DockerImageName;
+
+import java.util.List;
 
 import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.mockOpaqueToken;
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
 @SpringBootTest
 @AutoConfigureWebTestClient
-@ActiveProfiles({"test", "seed"})
+@ActiveProfiles({"test"})
 public class TheaterControllerTest {
 
     @Autowired
     private WebTestClient client;
+
+    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:bionic"))
+            .withExposedPorts(27017)
+            .withEnv("MONGO_INIT_DATABASE", "airbnb");
+
+    @BeforeAll
+    public static void setUp() {
+        mongoDBContainer.setPortBindings(List.of("27018:27017"));
+        mongoDBContainer.start();
+    }
+
 
     @Test
     public void collectionGet_noAuth_returnsUnauthorized() throws Exception {
@@ -51,4 +68,10 @@ public class TheaterControllerTest {
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.id").isNotEmpty();
     }
+
+    @AfterAll
+    public static void tearDown(){
+        mongoDBContainer.stop();
+    }
+
 }
