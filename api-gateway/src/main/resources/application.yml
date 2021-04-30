@@ -11,6 +11,7 @@ okta:
     issuer: https://{yourOktaDomain}/oauth2/default
     client-id: {clientId}
     client-secret: {clientSecret}
+    scopes: openid, profile, email
 
 
 eureka:
