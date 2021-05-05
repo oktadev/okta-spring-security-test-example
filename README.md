@@ -39,7 +39,7 @@ You will be prompted to select the following options:
 
 The OktaCLI will create the client application and configure the issuer, clientId and clientSecret in `src/main/resources/application.properties`. Update the `issuer`, `client-id` and `client-secret` in `application.yml`. Delete `application.properties`.
 
-```shell
+```yml
 okta:
   oauth2:
     issuer: https://{yourOktaDomain}/oauth2/default
@@ -47,16 +47,9 @@ okta:
     client-secret: {clientSecret}
 ```
 
-
 ## Configure the listings microservice
 
-Get the MongoDB dump files `listingsAndReviews.bson`, `listingsAndreviews.metadata.json` from [Github](https://github.com/huynhsamha/quick-mongo-atlas-datasets/tree/master/dump/sample_airbnb).
-
-Update the `mongo-dump` files location in `application.yml`.
-```
-mongo-dump: /{path}/listingsAndReviews.bson
-```
-Update the `issuer` as well.
+Update the `issuer` in `application.yml`.
 
 ```yml
 okta:
@@ -80,42 +73,25 @@ With OktaCLI, create a client application as illustrated before, and provide the
 
 Update the `issuer`, `client-id` and `client-secret` in `application.yml`, from the values in `application.properties`. Delete `application.properties`.
 
+## Configure the MongoDB Data files
 
-Get the MongoDB dump files `theaters.bson`, `theaters.metadata.json` from [Github](https://github.com/huynhsamha/quick-mongo-atlas-datasets/tree/master/dump/sample_mflix).
 
-Update the `mongo-dump` files location in `application.yml`.
-```
-mongo-dump: /{path}/theaters.bson
-```
+Get the MongoDB dump files `theaters.bson`, `theaters.metadata.json` from [Github](https://github.com/huynhsamha/quick-mongo-atlas-datasets/tree/master/dump/sample_mflix). Also get the MongoDB dump files `listingsAndReviews.bson`, `listingsAndreviews.metadata.json` from [Github](https://github.com/huynhsamha/quick-mongo-atlas-datasets/tree/master/dump/sample_airbnb). Place all files in the same folder. Then update `docker/docker-compose.yml` `/db-dump` volume mapping for the `mongo` service, set the dumps folder.
 
-## Run the applications with Maven
 
+## Build the applications image
+
+Go through each project and build the docker image with the following command:
 ```shell
-cd eureka
-```
-```shell
-./mvnw spring-boot:run
+./mvnw spring-boot:build-image
 ```
 
-```shell
-cd api-gateway
-```
-```shell
-./mvnw spring-boot:run
-```
-```shell
-cd theaters
-```
-```shell
-./mvnw spring-boot:run -Dspring-boot.run.profiles=seed
-```
-```shell
-cd listings
-```
-```shell
-./mvnw spring-boot:run -Dspring-boot.run.profiles=seed
-```
+## Run the applications with Docker Compose
 
+```shell
+cd docker
+docker-compose up
+```
 Go to `http://localhost:8080/userdata` and login to Okta. Copy the `accessToken` and set as an environment variable:
 ```shell
 ACCESS_TOKEN={accessToken}
