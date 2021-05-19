@@ -1,4 +1,4 @@
-# Tutorial: Simplify your Web Testing with Spring Security Test
+# Testing Spring Security Example
 
 This repository contains all the code for [Better Testing with Spring Security Test][blog], illustrating request mocking for OIDC code flow, JWT authorization, and OpaqueToken authorization integration tests.
 
