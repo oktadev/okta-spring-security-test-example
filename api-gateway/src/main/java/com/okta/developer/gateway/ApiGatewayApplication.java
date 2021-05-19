@@ -11,22 +11,22 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class ApiGatewayApplication {
 
-	@Autowired
-	private TokenRelayGatewayFilterFactory filterFactory;
+    @Autowired
+    private TokenRelayGatewayFilterFactory filterFactory;
 
-	public static void main(String[] args) {
-		SpringApplication.run(ApiGatewayApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ApiGatewayApplication.class, args);
+    }
 
-	@Bean
-	public RouteLocator routeLocator(RouteLocatorBuilder builder) {
-		return builder.routes()
-			.route("listing", r -> r.path("/listing/**")
-				.filters(f -> f.filter(filterFactory.apply()))
-				.uri("lb://listing"))
-			.route("theater", r -> r.path("/theater/**")
-				.filters(f -> f.filter(filterFactory.apply()))
-				.uri("lb://theater"))
-			.build();
-	}
+    @Bean
+    public RouteLocator routeLocator(RouteLocatorBuilder builder) {
+        return builder.routes()
+            .route("listing", r -> r.path("/listing/**")
+                .filters(f -> f.filter(filterFactory.apply()))
+                .uri("lb://listing"))
+            .route("theater", r -> r.path("/theater/**")
+                .filters(f -> f.filter(filterFactory.apply()))
+                .uri("lb://theater"))
+            .build();
+    }
 }
