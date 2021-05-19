@@ -1,16 +1,19 @@
 # Tutorial: Simplify your Web Testing with Spring Security Test
 
-This repository contains all the code for the Spring Security Test tutorial, illustrating request mocking for OIDC code flow, JWT authorization and OpaqueToken authorization integration tests.
+This repository contains all the code for [Better Testing with Spring Security Test][blog], illustrating request mocking for OIDC code flow, JWT authorization, and OpaqueToken authorization integration tests.
 
 **Prerequisites**:
+
 - [Java 11+](https://openjdk.java.net/install/index.html)
 - [Okta CLI](https://cli.okta.com/)
 
 ## Getting Started
 
 To install this example, run the following commands:
+
 ```bash
-git clone https://github.com/indiepopart/spring-security-test.git
+git clone https://github.com/oktadev/okta-spring-security-test-example.git
+cd okta-spring-security-test-example
 ```
 
 ## Configure the api-gateway
@@ -19,16 +22,18 @@ git clone https://github.com/indiepopart/spring-security-test.git
 cd api-gateway
 ```
 
-With OktaCLI, register for a free developer account:
+Using the [Okta CLI](https://cli.okta.com/), register for a free developer account:
 
 ```shell
 okta register
 ```
-Provide the required information. Once you complete the registration, create a client application with the following command:
+
+Provide the required information. Once you complete the registration, create an OIDC application with the following command:
 
 ```shell
 okta apps create
 ```
+
 You will be prompted to select the following options:
 
 - Application name: api-gateway
@@ -37,9 +42,9 @@ You will be prompted to select the following options:
 - Redirect URI: Default
 - Post Logout Redirect URI: Default
 
-The OktaCLI will create the client application and configure the issuer, clientId and clientSecret in `src/main/resources/application.properties`. Update the `issuer`, `client-id` and `client-secret` in `application.yml`. Delete `application.properties`.
+The Okta CLI will create the client application and configure the issuer, clientId and clientSecret in `src/main/resources/application.properties`. Update the `issuer`, `client-id` and `client-secret` in `application.yml`. Delete `application.properties`.
 
-```yml
+```yaml
 okta:
   oauth2:
     issuer: https://{yourOktaDomain}/oauth2/default
@@ -51,7 +56,7 @@ okta:
 
 Update the `issuer` in `application.yml`.
 
-```yml
+```yaml
 okta:
   oauth2:
     issuer: https://{yourOktaDomain}/oauth2/default
@@ -63,7 +68,7 @@ okta:
 cd theaters
 ```
 
-With OktaCLI, create a client application as illustrated before, and provide the following settings:
+With Okta CLI, create a client application as illustrated before, and provide the following settings:
 
 - Application name: theaters
 - Type of Application: Web
@@ -75,13 +80,18 @@ Update the `issuer`, `client-id` and `client-secret` in `application.yml`, from 
 
 ## Configure the MongoDB Data files
 
+Get the MongoDB dump files `theaters.bson`, `theaters.metadata.json` from [Github](https://github.com/huynhsamha/quick-mongo-atlas-datasets/tree/master/dump/sample_mflix). Also get the MongoDB dump files `listingsAndReviews.bson`, `listingsAndreviews.metadata.json` from [GitHub](https://github.com/huynhsamha/quick-mongo-atlas-datasets/tree/master/dump/sample_airbnb). Place all files in the same folder. Then update `docker/docker-compose.yml` `/db-dump` volume mapping for the `mongo` service to set the dumps folder.
 
-Get the MongoDB dump files `theaters.bson`, `theaters.metadata.json` from [Github](https://github.com/huynhsamha/quick-mongo-atlas-datasets/tree/master/dump/sample_mflix). Also get the MongoDB dump files `listingsAndReviews.bson`, `listingsAndreviews.metadata.json` from [Github](https://github.com/huynhsamha/quick-mongo-atlas-datasets/tree/master/dump/sample_airbnb). Place all files in the same folder. Then update `docker/docker-compose.yml` `/db-dump` volume mapping for the `mongo` service, set the dumps folder.
+```yaml
+volumes:
+  - ./initdb.sh:/docker-entrypoint-initdb.d/initdb.sh
+  - <path-to-files-you-downloaded>:/db-dump
+```
 
+## Build each application's image
 
-## Build the applications image
+Go through each project and build its Docker image with the following command:
 
-Go through each project and build the docker image with the following command:
 ```shell
 ./mvnw spring-boot:build-image
 ```
@@ -92,18 +102,38 @@ Go through each project and build the docker image with the following command:
 cd docker
 docker-compose up
 ```
+
 Go to `http://localhost:8080/userdata` and login to Okta. Copy the `accessToken` and set as an environment variable:
+
 ```shell
 ACCESS_TOKEN={accessToken}
-```
-```shell
+
 http POST http://localhost:8080/listing name=test "Authorization:Bearer ${ACCESS_TOKEN}"
 ```
 
 You will see the following response:
 ```
 HTTP/1.1 403 Forbidden
-WWW-Authenticate: Bearer error="insufficient_scope", error_description="The request requires higher privileges than provided by the access token.", error_uri="https://tools.ietf.org/html/rfc6750#section-3.1"
+WWW-Authenticate: Bearer error="insufficient_scope", 
+  error_description="The request requires higher privileges than provided by the access token.", 
+  error_uri="https://tools.ietf.org/html/rfc6750#section-3.1"
 ```
 
 Configure the required groups `listing_admin` and `theater_admin` in the Okta dashboard, and add the `groups` claim to the `accessToken` as detailed in the blog post.
+
+## Links
+
+This example uses the following open source libraries from Okta:
+
+* [Okta CLI](https://github.com/okta/okta-cli)
+* [Okta Spring Boot Starter](https://github.com/okta/okta-spring-boot)
+
+## Help
+
+Please post any questions as comments on [this example's blog post][blog], or use our [Okta Developer Forums](https://devforum.okta.com/).
+
+## License
+
+Apache 2.0, see [LICENSE](LICENSE).
+
+[blog]: https://developer.okta.com/blog/2021/05/19/spring-security-testing

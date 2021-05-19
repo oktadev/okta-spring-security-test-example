@@ -13,7 +13,6 @@ okta:
     client-secret: {clientSecret}
     scopes: openid, profile, email
 
-
 eureka:
   client:
     service-url:

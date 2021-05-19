@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles({"test"})
+@ActiveProfiles("test")
 public class AirbnbListingMvcTest {
 
     @Autowired
@@ -35,8 +35,8 @@ public class AirbnbListingMvcTest {
     private ObjectMapper objectMapper;
 
     private static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:bionic"))
-            .withExposedPorts(27017)
-            .withEnv("MONGO_INIT_DATABASE", "airbnb");
+        .withExposedPorts(27017)
+        .withEnv("MONGO_INIT_DATABASE", "airbnb");
 
     @BeforeAll
     public static void setUp() {
@@ -60,7 +60,7 @@ public class AirbnbListingMvcTest {
         listing.setName("test");
         String json = objectMapper.writeValueAsString(listing);
         this.mockMvc.perform(post("/listing").content(json).with(jwt()))
-                .andExpect(status().isForbidden());
+            .andExpect(status().isForbidden());
     }
 
     @Test
@@ -69,9 +69,9 @@ public class AirbnbListingMvcTest {
         listing.setName("test");
         String json = objectMapper.writeValueAsString(listing);
         this.mockMvc.perform(post("/listing").content(json).with(jwt().authorities(new SimpleGrantedAuthority("listing_admin"))))
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").isNotEmpty());
+            .andDo(print())
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id").isNotEmpty());
     }
 
     @AfterAll

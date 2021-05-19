@@ -21,7 +21,7 @@ import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
 @SpringBootTest
 @AutoConfigureWebTestClient
-@ActiveProfiles({"test"})
+@ActiveProfiles("test")
 public class TheaterControllerTest {
 
     @Autowired
@@ -36,7 +36,6 @@ public class TheaterControllerTest {
         mongoDBContainer.setPortBindings(List.of("27017:27017"));
         mongoDBContainer.start();
     }
-
 
     @Test
     public void collectionGet_noAuth_returnsUnauthorized() throws Exception {
@@ -73,5 +72,4 @@ public class TheaterControllerTest {
     public static void tearDown(){
         mongoDBContainer.stop();
     }
-
 }
