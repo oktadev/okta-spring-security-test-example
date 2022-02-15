@@ -42,11 +42,9 @@ cd api-gateway
 
 . Install the Okta CLI and run `okta register` to sign up for a new account. If you already have an account, run `okta login`.
 +
-Run `okta apps create`. Select the default app name, or change it as you see fit. Choose **Web** and press **Enter**.
-+
-Select **Okta Spring Boot Starter**. Accept the default redirect URI values provided for you.
+Run `okta apps create`. Select the default app name, or change it as you see fit. Choose **Web** > **Okta Spring Boot Starter**. Accept the default redirect URI values provided for you.
 
-. Rename `src/main/resources/application.properties` to `application.yml`, and reformat to YAML syntax:
+. Rename `src/main/resources/application.properties` to `application.yml`, and reformat to YAML syntax: [`sst-gateway-config`]
 +
 [source,yaml]
 ----
@@ -82,7 +80,7 @@ eureka:
 </dependency>
 ----
 
-. Create a `com.okta.developer.gateway.controller` package. Then create a `UserData` class and `UserDataController` to expose the OIDC ID token and access token, to use in later tests.
+. Create a `com.okta.developer.gateway.controller` package. Then create a `UserData` class and `UserDataController` to expose the OIDC ID token and access token, to use in later tests. [`sst-gateway-user`, `sst-gateway-usercontroller`]
 +
 [source,java]
 ----
@@ -128,7 +126,7 @@ public class UserDataController {
 }
 ----
 
-. Create `com.okta.developer.gateway.security.SecurityConfiguration` to enable OIDC Login and JWT authentication:
+. Create `com.okta.developer.gateway.security.SecurityConfiguration` to enable OIDC Login and JWT authentication: [`sst-gateway-security`]
 +
 [source,java]
 ----
@@ -171,10 +169,6 @@ eureka:
 +
 [source,java]
 ----
-package com.okta.developer.gateway;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
@@ -182,7 +176,7 @@ import org.springframework.test.context.ActiveProfiles;
 class ApiGatewayApplicationTests { ... }
 ----
 
-. Create the `com.okta.developer.gateway.controller` package under `src/test/java`. Add the first security tests with `WebTestClient` and `mockOidcLogin()`:
+. Create the `com.okta.developer.gateway.controller` package under `src/test/java`. Add the first security tests with `WebTestClient` and `mockOidcLogin()`: [`sst-gateway-test`]
 +
 ====
 [source,java]
@@ -276,7 +270,7 @@ unzip listings.zip
 </dependency>
 ----
 
-. Rename `application.properties` to `application.yml` and set the following content:
+. Rename `application.properties` to `application.yml` and set the following content: [`sst-listings-config`]
 +
 [source,yaml]
 ----
@@ -302,8 +296,11 @@ eureka:
 +
 CAUTION: Make sure to replace `\{yourOktaDomain}` with your Okta domain!
 
-. Create the `com.okta.developer.listings.model` package under `src/main/java`. Add a model class `AirbnbListing`:
+. Create the `com.okta.developer.listings.model` package under `src/main/java`. Add a model class `AirbnbListing`: [`sst-listings-model`]
 +
+.`src/main/java/com/okta/developer/listings/model/AirbnbListing.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.listings.model;
@@ -336,6 +333,7 @@ public class AirbnbListing {
 
 }
 ----
+====
 
 . Create a `com.okta.developer.listings.repository` package under `src/main/java`. Add a `AirbnbListingRepository` repository:
 +
@@ -363,8 +361,11 @@ public interface AirbnbListingRepository extends MongoRepository<AirbnbListing, 
 . The `save()` operation is overridden to configure authorization, requiring the authority `listing_admin`.
 ====
 
-. Create a `com.okta.developer.listings.config` package. Add a `RestConfiguration` class for tweaking the Spring Data REST responses:
+. Create a `com.okta.developer.listings.config` package. Add a `RestConfiguration` class for tweaking the Spring Data REST responses: [`sst-listings-restconfig`]
 +
+.`src/main/java/com/okta/developer/listings/config/RestConfiguration.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.listings.config;
@@ -389,9 +390,13 @@ public class RestConfiguration {
     }
 }
 ----
+====
 
-. Create `com.okta.developer.listings.security.SecurityConfiguration` to require JWT authentication for all requests:
+. Create `com.okta.developer.listings.security.SecurityConfiguration` to require JWT authentication for all requests: [`sst-listings-security`]
 +
+.`src/main/java/com/okta/developer/listings/security/SecurityConfiguration.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.listings.security;
@@ -426,26 +431,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 }
 ----
+====
 
 . Update `ListingsApplicationTests` to enable the `test` profile that disables the Eureka client:
 +
 [source,java]
 ----
-package com.okta.developer.listings;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class ListingsApplicationTests {
-
-    @Test
-    void contextLoads() {
-    }
-
-}
+class ListingsApplicationTests { ... }
 ----
 
 . Create `src/test/resources/application-test.yml`:
@@ -458,7 +454,7 @@ spring:
       enabled: false
 ----
 
-. Now, create `AirbnbListingMvcTest` to verify the authorization.
+. Now, create `AirbnbListingMvcTest` to verify the authorization. [`sst-listings-test`]
 +
 ====
 [source,java]
@@ -616,7 +612,7 @@ okta apps create
 # select Okta Spring Boot starter
 ----
 
-. Rename `application.properties` to `application.yml` and configure as follows:
+. Rename `application.properties` to `application.yml` and configure as follows: [`sst-theaters-config`]
 +
 [source,yaml]
 ----
@@ -643,8 +639,11 @@ eureka:
       defaultZone: ${SERVICE_URL_DEFAULT_ZONE}
 ----
 
-. Create `com.okta.developer.theaters.model.Location` to map some of the fields in the dataset:
+. Create `com.okta.developer.theaters.model.Location` to map some of the fields in the dataset: [`sst-theaters-location`]
 +
+.`src/main/java/com/okta/developer/theaters/model/Location.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.theaters.model;
@@ -662,9 +661,13 @@ public class Location {
     private GeoJsonPoint geo;
 }
 ----
+====
 
-. Add the `Theater` model class:
+. Add the `Theater` model class: [`sst-theaters-theater`]
 +
+.`src/main/java/com/okta/developer/theaters/model/Theater.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.theaters.model;
@@ -687,21 +690,23 @@ public class Theater {
 
 }
 ----
+====
 
-. Create a `com.okta.developer.theaters.repository` package. Add the interface `TheaterRepository`:
+. Create a `com.okta.developer.theaters.repository` package. Add the interface `TheaterRepository`: [sst-theaters-repo`]
 +
 [source,java]
 ----
 package com.okta.developer.theaters.repository;
 
 import com.okta.developer.theaters.model.Theater;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongo
+;
 
 public interface TheaterRepository extends ReactiveMongoRepository<Theater, String> {
 }
 ----
 
-. Create a `TheatersController` in the `com.okta.developer.theaters.controller` package:
+. Create a `TheatersController` in the `com.okta.developer.theaters.controller` package: [`sst-theaters-controller`]
 +
 ====
 [source,java]
@@ -742,8 +747,11 @@ public class TheaterController {
 . The POST `/theater` endpoint requires `theater_admin` authority to proceed with the persistence.
 ====
 
-. Create a `com.okta.developer.theaters.security` package. Add a custom `JwtOpaqueTokenIntrospector` to parse authorities from the `groups` claim in the access token.
+. Create a `com.okta.developer.theaters.security` package. Add a custom `JwtOpaqueTokenIntrospector` to parse authorities from the `groups` claim in the access token. [`sst-theaters-jwt`]
 +
+.`src/main/java/com/okta/developer/theaters/security/JwtOpaqueTokenIntrospector.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.theaters.security;
@@ -805,9 +813,13 @@ public class JwtOpaqueTokenIntrospector implements ReactiveOpaqueTokenIntrospect
     }
 }
 ----
+====
 
-. Add a `SecurityConfiguration` class to configure opaque token authentication.
+. Add a `SecurityConfiguration` class to configure opaque token authentication. [`sst-theaters-security`]
 +
+.`src/main/java/com/okta/developer/theaters/security/SecurityConfiguration.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.theaters.security;
@@ -839,9 +851,13 @@ public class SecurityConfiguration {
     }
 }
 ----
+====
 
-. Update `TheatersApplicationTests` to disable the Eureka client and to use Testcontainers for MongoDB:
+. Update `TheatersApplicationTests` to disable the Eureka client and to use Testcontainers for MongoDB: [`sst-theaters-apptests`]
 +
+.`src/test/java/com/okta/developer/theaters/TheatersApplicationTests.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.theaters;
@@ -881,6 +897,7 @@ class TheatersApplicationTests {
     }
 }
 ----
+====
 
 . Create `src/test/resources/application-test.yml` with the following content:
 +
@@ -892,7 +909,7 @@ spring:
       enabled: false
 ----
 
-. Create `com.okta.developer.theaters.controller.TheaterControllerTest` under `src/test/java` to verify the endpoints' authorization.
+. Create `com.okta.developer.theaters.controller.TheaterControllerTest` under `src/test/java` to verify the endpoints' authorization. [`sst-theaters-controllertest`]
 +
 ====
 [source,java]
@@ -1041,9 +1058,6 @@ unzip eureka.zip
 +
 [source,java]
 ----
-package com.okta.developer.eureka;
-
-...
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
 @SpringBootApplication
@@ -1051,7 +1065,7 @@ import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 public class EurekaApplication { ... }
 ----
 
-. Rename `src/main/resources/application.properties` to `application.yml` and add the following content:
+. Rename `src/main/resources/application.properties` to `application.yml` and add the following content: [`sst-eureka-config`]
 +
 [source,yaml]
 ----
@@ -1068,8 +1082,11 @@ eureka:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
 ----
 
-. Configure `theater` and `listing` routes in the `api-gateway` project. Edit `ApiGatewayApplication` to add a `RouteLocator` bean:
+. Configure `theater` and `listing` routes in the `api-gateway` project. Edit `ApiGatewayApplication` to add a `RouteLocator` bean: [`sst-gateway-routes`]
 +
+.`src/test/java/com/okta/developer/gateway/ApiGatewayApplication.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.gateway;
@@ -1105,9 +1122,13 @@ public class ApiGatewayApplication {
     }
 }
 ----
+====
 
-. Create a `docker` folder at the root level (same level as the api-gateway, theaters, and listings), where all services are contained. Add a `docker-compose.yml` file with the following content:
+. Create a `docker` folder at the root level (same level as the api-gateway, theaters, and listings), where all services are contained. Add a `docker-compose.yml` file with the following content: [`sst-docker`]
 +
+.`docker-compose.yml`
+[%collapsible]
+====
 [source,yaml]
 ----
 version: "3.8"
@@ -1159,6 +1180,7 @@ services:
       - SERVICE_URL_DEFAULT_ZONE=http://eureka:8761/eureka
       - SPRING_DATA_MONGODB_HOST=mongo
 ----
+====
 
 . Get the MongoDB dump files `theaters.bson`, `theaters.metadata.json` from https://github.com/huynhsamha/quick-mongo-atlas-datasets/tree/master/dump/sample_mflix[GitHub].
 +
