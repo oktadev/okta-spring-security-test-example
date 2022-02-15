@@ -176,7 +176,7 @@ import org.springframework.test.context.ActiveProfiles;
 class ApiGatewayApplicationTests { ... }
 ----
 
-. Create the `com.okta.developer.gateway.controller` package under `src/test/java`. Add the first security tests with `WebTestClient` and `mockOidcLogin()`: [`sst-gateway-test`]
+. Create a `com.okta.developer.gateway.controller` package under `src/test/java`. Add a `UserDataControllerTest` class with tests using `WebTestClient` and `mockOidcLogin()`: [`sst-gateway-test`]
 +
 ====
 [source,java]
@@ -335,7 +335,7 @@ public class AirbnbListing {
 ----
 ====
 
-. Create a `com.okta.developer.listings.repository` package under `src/main/java`. Add a `AirbnbListingRepository` repository:
+. Create a `com.okta.developer.listings.repository` package under `src/main/java`. Add a `AirbnbListingRepository` repository: [`sst-listings-repo`]
 +
 ====
 [source,java]
@@ -402,8 +402,6 @@ public class RestConfiguration {
 package com.okta.developer.listings.security;
 
 import com.okta.spring.boot.oauth.Okta;
-import com.okta.spring.boot.oauth.config.OktaOAuth2Properties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -412,12 +410,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-    private final OktaOAuth2Properties oktaOAuth2Properties;
-
-    public SecurityConfiguration(OktaOAuth2Properties oktaOAuth2Properties) {
-        this.oktaOAuth2Properties = oktaOAuth2Properties;
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -692,21 +684,20 @@ public class Theater {
 ----
 ====
 
-. Create a `com.okta.developer.theaters.repository` package. Add the interface `TheaterRepository`: [sst-theaters-repo`]
+. Create a `com.okta.developer.theaters.repository` package. Add the interface `TheaterRepository`: [`sst-theaters-repo`]
 +
 [source,java]
 ----
 package com.okta.developer.theaters.repository;
 
 import com.okta.developer.theaters.model.Theater;
-import org.springframework.data.mongodb.repository.ReactiveMongo
-;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 
 public interface TheaterRepository extends ReactiveMongoRepository<Theater, String> {
 }
 ----
 
-. Create a `TheatersController` in the `com.okta.developer.theaters.controller` package: [`sst-theaters-controller`]
+. Create a `TheaterController` in the `com.okta.developer.theaters.controller` package: [`sst-theaters-controller`]
 +
 ====
 [source,java]
@@ -1216,7 +1207,7 @@ mongorestore -d airbnb /db-dump
 +
 ----
 cd docker
-docker-compose up
+docker compose up
 ----
 
 . Go to `http://localhost:8761`, and you should see the Eureka home. (Wait for all services to register.)
@@ -1300,7 +1291,7 @@ WWW-Authenticate: Bearer error="invalid_token",
 
 == Build better tests with Spring Security!
 
-I hope you enjoyed this tutorial and understand more about `SecurityMockServerConfigurers` in Spring Security's WebFlux test support and `SecurityMockMvcRequestPostProcessors` in the Spring MVC test support.
+I hope you enjoyed this screencast and understand more about `SecurityMockServerConfigurers` in Spring Security's WebFlux test support and `SecurityMockMvcRequestPostProcessors` in the Spring MVC test support.
 
 🍃 Find the code on GitHub: https://github.com/oktadev/okta-spring-security-test-example[@oktadev/okta-spring-security-test-example]
 
