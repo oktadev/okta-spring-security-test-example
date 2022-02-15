@@ -14,7 +14,7 @@ public class RestConfiguration {
     private RepositoryRestConfiguration repositoryRestConfiguration;
 
     @PostConstruct
-    public void setUp(){
+    public void setUp() {
         this.repositoryRestConfiguration.setReturnBodyOnCreate(true);
         this.repositoryRestConfiguration.exposeIdsFor(AirbnbListing.class);
     }
