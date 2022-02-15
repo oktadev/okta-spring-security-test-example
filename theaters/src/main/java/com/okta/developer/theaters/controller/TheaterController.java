@@ -13,19 +13,19 @@ public class TheaterController {
 
     private TheaterRepository theaterRepository;
 
-    public TheaterController(TheaterRepository theaterRepository){
+    public TheaterController(TheaterRepository theaterRepository) {
         this.theaterRepository = theaterRepository;
     }
 
     @GetMapping("/theater")
-    public Flux<Theater> getAllTheaters(){
+    public Flux<Theater> getAllTheaters() {
         return theaterRepository.findAll();
     }
 
     @PostMapping("/theater")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('theater_admin')")
-    public Mono<Theater> saveTheater(@RequestBody Theater theater){
+    public Mono<Theater> saveTheater(@RequestBody Theater theater) {
         return theaterRepository.save(theater);
     }
 

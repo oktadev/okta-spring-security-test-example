@@ -18,21 +18,21 @@ public class UserDataControllerTest {
     private WebTestClient client;
 
     @Test
-    public void get_noAuth_returnsRedirectLogin(){
+    public void get_noAuth_returnsRedirectLogin() {
         this.client.get().uri("/userdata")
-                .exchange()
-                .expectStatus().is3xxRedirection();
+            .exchange()
+            .expectStatus().is3xxRedirection();
     }
 
     @Test
-    public void get_withOidcLogin_returnsOk(){
+    public void get_withOidcLogin_returnsOk() {
         this.client.mutateWith(mockOidcLogin().idToken(token -> token.claim("name", "Mock User")))
-                .get().uri("/userdata")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .jsonPath("$.userName").isNotEmpty()
-                .jsonPath("$.idToken").isNotEmpty()
-                .jsonPath("$.accessToken").isNotEmpty();
+            .get().uri("/userdata")
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody()
+            .jsonPath("$.userName").isNotEmpty()
+            .jsonPath("$.idToken").isNotEmpty()
+            .jsonPath("$.accessToken").isNotEmpty();
     }
 }

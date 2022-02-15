@@ -34,9 +34,10 @@ public class AirbnbListingMvcTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:bionic"))
-        .withExposedPorts(27017)
-        .withEnv("MONGO_INIT_DATABASE", "airbnb");
+    private static final MongoDBContainer mongoDBContainer =
+        new MongoDBContainer(DockerImageName.parse("mongo:bionic"))
+            .withExposedPorts(27017)
+            .withEnv("MONGO_INIT_DATABASE", "airbnb");
 
     @BeforeAll
     public static void setUp() {
@@ -68,14 +69,15 @@ public class AirbnbListingMvcTest {
         AirbnbListing listing = new AirbnbListing();
         listing.setName("test");
         String json = objectMapper.writeValueAsString(listing);
-        this.mockMvc.perform(post("/listing").content(json).with(jwt().authorities(new SimpleGrantedAuthority("listing_admin"))))
+        this.mockMvc.perform(post("/listing").content(json).with(jwt()
+                .authorities(new SimpleGrantedAuthority("listing_admin"))))
             .andDo(print())
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").isNotEmpty());
     }
 
     @AfterAll
-    public static void tearDown(){
+    public static void tearDown() {
         mongoDBContainer.stop();
     }
 

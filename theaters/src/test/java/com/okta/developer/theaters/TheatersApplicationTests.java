@@ -14,22 +14,23 @@ import java.util.List;
 @ActiveProfiles("test")
 class TheatersApplicationTests {
 
-	private static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:bionic"))
-		.withExposedPorts(27017)
-		.withEnv("MONGO_INIT_DATABASE", "airbnb");
+    private static final MongoDBContainer mongoDBContainer =
+        new MongoDBContainer(DockerImageName.parse("mongo:bionic"))
+            .withExposedPorts(27017)
+            .withEnv("MONGO_INIT_DATABASE", "airbnb");
 
-	@BeforeAll
-	public static void setUp() {
-		mongoDBContainer.setPortBindings(List.of("27017:27017"));
-		mongoDBContainer.start();
-	}
+    @BeforeAll
+    public static void setUp() {
+        mongoDBContainer.setPortBindings(List.of("27017:27017"));
+        mongoDBContainer.start();
+    }
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
-	@AfterAll
-	public static void tearDown(){
-		mongoDBContainer.stop();
-	}
+    @AfterAll
+    public static void tearDown() {
+        mongoDBContainer.stop();
+    }
 }

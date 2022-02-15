@@ -24,7 +24,8 @@ public class JwtOpaqueTokenIntrospector implements ReactiveOpaqueTokenIntrospect
     @PostConstruct
     private void setUp() {
         delegate =
-            new NimbusReactiveOpaqueTokenIntrospector(oAuth2.getOpaquetoken().getIntrospectionUri(),
+            new NimbusReactiveOpaqueTokenIntrospector(
+                oAuth2.getOpaquetoken().getIntrospectionUri(),
                 oAuth2.getOpaquetoken().getClientId(),
                 oAuth2.getOpaquetoken().getClientSecret());
     }
@@ -36,7 +37,8 @@ public class JwtOpaqueTokenIntrospector implements ReactiveOpaqueTokenIntrospect
 
     private Mono<OAuth2AuthenticatedPrincipal> enhance(OAuth2AuthenticatedPrincipal principal) {
         Collection<GrantedAuthority> authorities = extractAuthorities(principal);
-        OAuth2AuthenticatedPrincipal enhanced = new DefaultOAuth2AuthenticatedPrincipal(principal.getAttributes(), authorities);
+        OAuth2AuthenticatedPrincipal enhanced =
+            new DefaultOAuth2AuthenticatedPrincipal(principal.getAttributes(), authorities);
         return Mono.just(enhanced);
     }
 

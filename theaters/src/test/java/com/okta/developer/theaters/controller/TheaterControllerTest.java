@@ -27,7 +27,8 @@ public class TheaterControllerTest {
     @Autowired
     private WebTestClient client;
 
-    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:bionic"))
+    private static final MongoDBContainer mongoDBContainer =
+        new MongoDBContainer(DockerImageName.parse("mongo:bionic"))
             .withExposedPorts(27017)
             .withEnv("MONGO_INIT_DATABASE", "airbnb");
 
@@ -44,7 +45,8 @@ public class TheaterControllerTest {
 
     @Test
     public void collectionGet_withValidOpaqueToken_returnsOk() throws Exception {
-        this.client.mutateWith(mockOpaqueToken()).get().uri("/theater").exchange().expectStatus().isOk();
+        this.client.mutateWith(mockOpaqueToken())
+            .get().uri("/theater").exchange().expectStatus().isOk();
     }
 
     @Test
@@ -53,23 +55,24 @@ public class TheaterControllerTest {
         theater.setId("123");
         theater.setLocation(new Location());
         this.client.mutateWith(mockOpaqueToken())
-                .post().uri("/theater").body(fromValue(theater))
-                .exchange().expectStatus().isForbidden();
+            .post().uri("/theater").body(fromValue(theater))
+            .exchange().expectStatus().isForbidden();
     }
 
     @Test
     public void post_withValidOpaqueToken_returnsCreated() throws Exception {
         Theater theater = new Theater();
         theater.setLocation(new Location());
-        this.client.mutateWith(mockOpaqueToken().authorities(new SimpleGrantedAuthority("theater_admin")))
-                .post().uri("/theater").body(fromValue(theater))
-                .exchange()
-                .expectStatus().isCreated()
-                .expectBody().jsonPath("$.id").isNotEmpty();
+        this.client.mutateWith(
+                mockOpaqueToken().authorities(new SimpleGrantedAuthority("theater_admin")))
+            .post().uri("/theater").body(fromValue(theater))
+            .exchange()
+            .expectStatus().isCreated()
+            .expectBody().jsonPath("$.id").isNotEmpty();
     }
 
     @AfterAll
-    public static void tearDown(){
+    public static void tearDown() {
         mongoDBContainer.stop();
     }
 }
