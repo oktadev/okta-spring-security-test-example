@@ -1,6 +1,7 @@
 :experimental:
 :commandkey: &#8984;
 :toc: macro
+:source-highlighter: highlight.js
 
 = Spring Security Test Demo Steps
 
